@@ -7,13 +7,16 @@ import com.hcl.entity.Customer;
 import com.hcl.entity.Order;
 import com.hcl.entity.OrderItem;
 
+import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.UUID;
 
+@Service
 public class CheckoutServiceImpl implements CheckoutService {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public CheckoutServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -23,18 +26,18 @@ public class CheckoutServiceImpl implements CheckoutService {
     @Transactional
     public PurchaseResponse placeOrder(Purchase purchase) {
 
-        //Retrieve the order info from DTO
+        // retrieve the order info from dto
         Order order = purchase.getOrder();
 
-        //Generate tracking number
+        // generate tracking number
         String orderTrackingNumber = generateOrderTrackingNumber();
         order.setOrderTrackingNumber(orderTrackingNumber);
 
-        //Populate order with orderItems
+        // populate order with orderItems
         Set<OrderItem> orderItems = purchase.getOrderItems();
         orderItems.forEach(order::add);
 
-        //Populate order with billingAddress and shippingAddress
+        // populate order with billingAddress and shippingAddress
         order.setBillingAddress(purchase.getBillingAddress());
         order.setShippingAddress(purchase.getShippingAddress());
 
@@ -45,6 +48,7 @@ public class CheckoutServiceImpl implements CheckoutService {
         // save to the database
         customerRepository.save(customer);
 
+        // return a response
         return new PurchaseResponse(orderTrackingNumber);
     }
 

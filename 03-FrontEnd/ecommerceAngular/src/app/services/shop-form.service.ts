@@ -10,7 +10,7 @@ import { State } from '../common/state';
 })
 export class ShopFormService {
 
-  private countryUrl = "http://localhost:8080/api/country";
+  private countryUrl = "http://localhost:8080/api/countries";
   private stateUrl = "http://localhost:8080/api/states";
 
   constructor(private httpClient: HttpClient) { }
@@ -18,7 +18,7 @@ export class ShopFormService {
   getCountries(): Observable<Country[]> {
 
     return this.httpClient.get<GetResponseCountries>(this.countryUrl).pipe(
-      map(response => response._embedded.country)
+      map(response => response._embedded.countries)
     );
   }
 
@@ -57,7 +57,7 @@ export class ShopFormService {
 
 interface GetResponseCountries {
   _embedded: {
-    country: Country[];
+    countries: Country[];
   }
 }
 

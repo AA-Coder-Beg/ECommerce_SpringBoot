@@ -7,6 +7,13 @@ import com.hcl.entity.Customer;
 import com.hcl.entity.Order;
 import com.hcl.entity.OrderItem;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.Set;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,8 +23,10 @@ import java.util.UUID;
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
 
-    private final CustomerRepository customerRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
+    @Autowired
     public CheckoutServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
@@ -35,7 +44,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         // populate order with orderItems
         Set<OrderItem> orderItems = purchase.getOrderItems();
-        orderItems.forEach(order::add);
+        orderItems.forEach(item -> order.add(item));
 
         // populate order with billingAddress and shippingAddress
         order.setBillingAddress(purchase.getBillingAddress());
@@ -54,7 +63,9 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     private String generateOrderTrackingNumber() {
 
-        //Generates a random UUID number (Universally Unique Identifier)
+        // generate a random UUID number (UUID version-4)
+        // For details see: https://en.wikipedia.org/wiki/Universally_unique_identifier
+        //
         return UUID.randomUUID().toString();
     }
 }

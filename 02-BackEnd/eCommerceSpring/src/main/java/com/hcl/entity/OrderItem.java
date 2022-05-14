@@ -1,6 +1,5 @@
 package com.hcl.entity;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,14 +7,14 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "order_item")
+@Table(name="order_item")
 @Getter
 @Setter
 public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name="id")
     private Long id;
 
     @Column(name="image_url")
@@ -33,4 +32,5 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
+
 }

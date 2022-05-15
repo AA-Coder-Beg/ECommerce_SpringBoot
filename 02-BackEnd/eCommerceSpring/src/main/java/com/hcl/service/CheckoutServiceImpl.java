@@ -14,11 +14,6 @@ import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class CheckoutServiceImpl implements CheckoutService {
@@ -52,6 +47,16 @@ public class CheckoutServiceImpl implements CheckoutService {
 
         // populate customer with order
         Customer customer = purchase.getCustomer();
+
+        // check if this is an existing customer
+        String theEmail = customer.getEmail();
+        Customer customerFromDB = customerRepository.findByEmail(theEmail);
+
+        if(customerFromDB != null) {
+            //Customer found!
+            customer = customerFromDB;
+        }
+
         customer.add(order);
 
         // save to the database

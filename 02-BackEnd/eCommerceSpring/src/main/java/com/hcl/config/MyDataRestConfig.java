@@ -1,10 +1,8 @@
 package com.hcl.config;
 
-import com.hcl.entity.Country;
-import com.hcl.entity.Product;
-import com.hcl.entity.ProductCategory;
-import com.hcl.entity.State;
+import com.hcl.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -20,6 +18,9 @@ import java.util.Set;
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
 
+    @Value("${allowed.origins}")
+    private String[] theAllowedOrigins;
+
     private EntityManager entityManager;
 
     @Autowired
@@ -29,16 +30,20 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
-        HttpMethod[] unsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE};
+        HttpMethod[] unsupportedActions = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.PATCH};
 
-        //Here, we disable the HTTP methods: POST, PUT and DELETE for Product, ProductCategory, Country, State
+        //Here, we disable the HTTP methods: POST, PUT, DELETE and PATCH for Product, ProductCategory, Country, State, Order
         disableHttpMethods(Product.class, config, unsupportedActions); //Refactored
         disableHttpMethods(ProductCategory.class, config, unsupportedActions); //Refactored
         disableHttpMethods(Country.class, config, unsupportedActions);
         disableHttpMethods(State.class, config, unsupportedActions);
+        disableHttpMethods(Order.class, config, unsupportedActions);
 
         //Calling an internal helper method
         exposeIds(config);
+
+        //Configuring Cors mapping -- This means we can get rid of @CrossOrigin
+        cors.addMapping(config.getBasePath() + "/**").allowedOrigins(theAllowedOrigins);
     }
 
     //Refactored into a method

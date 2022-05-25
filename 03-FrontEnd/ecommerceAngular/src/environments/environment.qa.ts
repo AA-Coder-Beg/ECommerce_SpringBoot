@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  FrozenCow: "https://localhost:8443/api",
-  StripePublishableKey: "pk_test_51L39zZBghAvteNdMDW0UWR1vqpLl6ncfwsUDC9ykOmFG63w372RlXuFbHdGI8cvAxuWKYbyOmEuwRf9EXYyIrAwW00L70HrsPf"
+  FrozenCow: "https://localhost:9898/api"
 };
 
 /*
